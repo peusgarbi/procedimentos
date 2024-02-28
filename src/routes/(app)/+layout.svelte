@@ -1,5 +1,5 @@
-<nav class="p-2">
-	<div class="daisy-navbar rounded-lg drop-shadow-md bg-base-100 w-full max-w-5xl mx-auto">
+<nav class="pb-2">
+	<div class="daisy-navbar rounded-lg drop-shadow-md bg-base-100 w-full mx-auto">
 		<div class="flex-1">
 			<a href="/" class="daisy-btn daisy-btn-ghost text-xl">Procedimentos</a>
 		</div>

@@ -4,10 +4,16 @@ import type { Actions, PageServerLoad } from "./$types";
 import { error, redirect } from "@sveltejs/kit";
 import { DateTime } from "luxon";
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, request }) => {
 	if (locals.session) {
 		redirect(302, "/auth/login");
 	}
+
+	const userAgent = request.headers.get("user-agent") || "";
+
+	return {
+		userAgent,
+	};
 };
 
 export const actions: Actions = {

@@ -1,21 +1,58 @@
+<script lang="ts">
+	import type { PageData } from "./$types";
+	import { UAParser } from "ua-parser-js";
+
+	export let data: PageData;
+
+	let userAgent = UAParser(data.userAgent);
+	console.log(userAgent);
+</script>
+
 <main>
-	<form method="POST" class="w-full max-w-xl mx-auto">
-		<div class="flex flex-row">
-			<label class="daisy-input daisy-input-bordered flex items-center gap-2">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 16 16"
-					fill="currentColor"
-					class="w-4 h-4 opacity-70"
-					><path
-						fill-rule="evenodd"
-						d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-						clip-rule="evenodd"
-					/></svg
-				>
-				<input type="password" class="grow" value="password" />
-			</label>
-			<button type="submit" class="daisy-btn daisy-btn-primary">Login</button>
+	<form method="POST" class="w-full max-w-xl mx-auto flex flex-col gap-4">
+		<div class="daisy-card w-full bg-base-100 shadow-xl">
+			<div class="daisy-card-body">
+				<h2 class="daisy-card-title">Login</h2>
+				<p>Digite sua senha:</p>
+				<div class="flex flex-row gap-2">
+					<label class="daisy-input daisy-input-bordered flex items-center gap-2 grow">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 16 16"
+							fill="currentColor"
+							class="w-4 h-4 opacity-70"
+							><path
+								fill-rule="evenodd"
+								d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+								clip-rule="evenodd"
+							/></svg
+						>
+						<input type="password" class="grow" value="password" />
+					</label>
+					<div class="daisy-card-actions justify-end">
+						<button type="submit" class="daisy-btn daisy-btn-primary">Login</button>
+					</div>
+				</div>
+				<div class="prose">
+					<ul>
+						<li>
+							<span class="font-semibold">Navegador: </span>{userAgent.browser.name}
+							{userAgent.browser.version}
+						</li>
+						<li>
+							<span class="font-semibold">CPU Arquitetura: </span>{userAgent.cpu.architecture}
+						</li>
+						<li>
+							<span class="font-semibold">Motor: </span>{userAgent.engine.name}
+							{userAgent.engine.version}
+						</li>
+						<li>
+							<span class="font-semibold">Sistema Operacional: </span>{userAgent.os.name}
+							{userAgent.os.version}
+						</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 	</form>
 </main>

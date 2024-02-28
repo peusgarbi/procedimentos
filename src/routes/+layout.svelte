@@ -8,4 +8,6 @@
 	});
 </script>
 
-<slot />
+<div class="p-2 max-w-5xl mx-auto w-full">
+	<slot />
+</div>

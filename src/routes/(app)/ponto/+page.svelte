@@ -21,7 +21,7 @@
 </script>
 
 <main>
-	<div class="daisy-card w-full max-w-xl mx-auto bg-base-100 shadow-xl">
+	<div class="daisy-card w-full max-w-xl mx-auto bg-base-100 shadow-xl -z-50">
 		<div class="daisy-card-body">
 			<h2 class="text-3xl daisy-card-title">Bater Ponto!</h2>
 			<div class="prose">

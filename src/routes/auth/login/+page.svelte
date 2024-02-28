@@ -14,7 +14,7 @@
 </script>
 
 <main>
-	<form method="POST" class="w-full max-w-xl mx-auto flex flex-col gap-4" use:enhance>
+	<form method="POST" class="w-full max-w-xl mx-auto flex flex-col gap-4 -z-50" use:enhance>
 		<div class="daisy-card w-full bg-base-100 shadow-xl">
 			<div class="daisy-card-body">
 				<h2 class="daisy-card-title">Login</h2>

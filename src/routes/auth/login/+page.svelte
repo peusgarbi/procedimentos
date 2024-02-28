@@ -1,15 +1,20 @@
 <script lang="ts">
+	import { superForm } from "sveltekit-superforms";
+	import { slide } from "svelte/transition";
 	import type { PageData } from "./$types";
 	import { UAParser } from "ua-parser-js";
 
 	export let data: PageData;
 
+	const { form, errors, message, delayed, enhance } = superForm(data.form, {
+		delayMs: 100,
+	});
+
 	let userAgent = UAParser(data.userAgent);
-	console.log(userAgent);
 </script>
 
 <main>
-	<form method="POST" class="w-full max-w-xl mx-auto flex flex-col gap-4">
+	<form method="POST" class="w-full max-w-xl mx-auto flex flex-col gap-4" use:enhance>
 		<div class="daisy-card w-full bg-base-100 shadow-xl">
 			<div class="daisy-card-body">
 				<h2 class="daisy-card-title">Login</h2>
@@ -27,12 +32,21 @@
 								clip-rule="evenodd"
 							/></svg
 						>
-						<input type="password" class="grow" value="password" />
+						<input name="password" type="password" class="grow" bind:value={$form.password} />
 					</label>
 					<div class="daisy-card-actions justify-end">
-						<button type="submit" class="daisy-btn daisy-btn-primary">Login</button>
+						{#if $delayed}
+							<button class="daisy-btn daisy-btn-square">
+								<span class="daisy-loading daisy-loading-spinner"></span>
+							</button>
+						{:else}
+							<button type="submit" class="daisy-btn daisy-btn-primary">Login</button>
+						{/if}
 					</div>
 				</div>
+				{#if $errors.password}
+					<p transition:slide class="text-red-400 text-center">{$errors.password}</p>
+				{/if}
 				<div class="prose">
 					<ul>
 						<li>
@@ -51,6 +65,23 @@
 							{userAgent.os.version}
 						</li>
 					</ul>
+					{#if $message}
+						<div transition:slide role="alert" class="daisy-alert daisy-alert-error w-fit mx-auto">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="stroke-current shrink-0 h-6 w-6"
+								fill="none"
+								viewBox="0 0 24 24"
+								><path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+								/></svg
+							>
+							<span>{$message.text}</span>
+						</div>
+					{/if}
 				</div>
 			</div>
 		</div>

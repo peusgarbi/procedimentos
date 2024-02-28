@@ -13,6 +13,15 @@ declare global {
 		ip: string;
 	}
 
+	interface Surgery {
+		userId: ObjectId;
+		surgeryType: string;
+		role: string;
+		diagnosis: string;
+		patient: string;
+		date: Date;
+	}
+
 	namespace App {
 		// interface Error {}
 		interface Locals {

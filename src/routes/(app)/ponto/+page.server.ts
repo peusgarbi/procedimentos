@@ -11,7 +11,7 @@ type Ponto = {
 };
 
 export const load: PageServerLoad = async ({ locals }) => {
-	if (!locals.session) {
+	if (!locals.session || !locals.userId) {
 		redirect(302, "/auth/login");
 	}
 
@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	}
 
 	const pontos = mongodbReturn.client.db("procedimentos").collection<Ponto>("pontos");
-	const lastPonto = await pontos.findOne({}, { sort: { _id: -1 } });
+	const lastPonto = await pontos.findOne({ userId: locals.userId }, { sort: { _id: -1 } });
 
 	return {
 		lastPonto: {
@@ -34,7 +34,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 export const actions: Actions = {
 	default: async ({ locals }) => {
-		if (!locals.session) {
+		if (!locals.session || !locals.userId) {
 			redirect(302, "/auth/login");
 		}
 
@@ -45,7 +45,7 @@ export const actions: Actions = {
 			}
 
 			const pontos = mongodbReturn.client.db("procedimentos").collection<Ponto>("pontos");
-			const lastPonto = await pontos.findOne({}, { sort: { _id: -1 } });
+			const lastPonto = await pontos.findOne({ userId: locals.userId }, { sort: { _id: -1 } });
 			const timestamp = DateTime.local({ locale: "pt-BR", zone: "America/Sao_Paulo" }).toJSDate();
 			await pontos.insertOne({
 				timestamp,

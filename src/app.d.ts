@@ -5,6 +5,7 @@ declare global {
 		createdAt: Date;
 		expiresAt: Date;
 		lastUsed: Date;
+		userAgent: string;
 	}
 
 	namespace App {

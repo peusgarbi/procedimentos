@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-	default: async ({ locals, cookies }) => {
+	default: async ({ locals, cookies, request }) => {
 		if (locals.session) {
 			redirect(302, "/auth/login");
 		}
@@ -25,7 +25,13 @@ export const actions: Actions = {
 		const now = DateTime.local({ locale: "pt-BR", zone: "America/Sao_Paulo" });
 		const nowJs = now.toJSDate();
 		const expiresAt = now.plus({ days: 1 }).toJSDate();
-		const newSession = await sessions.insertOne({ createdAt: nowJs, lastUsed: nowJs, expiresAt });
+		const userAgent = request.headers.get("user-agent") || "";
+		const newSession = await sessions.insertOne({
+			createdAt: nowJs,
+			lastUsed: nowJs,
+			expiresAt,
+			userAgent,
+		});
 
 		cookies.set("accessToken", newSession.insertedId.toHexString(), {
 			path: "/",

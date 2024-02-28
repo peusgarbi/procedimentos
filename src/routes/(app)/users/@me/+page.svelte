@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Pagination from "$lib/components/Pagination.svelte";
 	import toast, { Toaster } from "svelte-french-toast";
 	import type { PageData } from "./$types";
 	import { page } from "$app/stores";
@@ -49,4 +50,13 @@
 			</tr>
 		</tfoot> -->
 	</table>
+	{#if data.page && data.per_page && data.totalCount && data.totalPages}
+		<Pagination
+			url={$page.url}
+			page={data.page}
+			per_page={data.per_page}
+			totalPages={data.totalPages}
+			totalCount={data.totalCount}
+		></Pagination>
+	{/if}
 </div>

@@ -12,19 +12,24 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 	const page = parseInt(url.searchParams.get("page") || "1");
 	const per_page = parseInt(url.searchParams.get("per_page") || "10");
 
-	const unparsedSurgeries = await queryForSurgeries({
+	const queryReturn = await queryForSurgeries({
 		userId: locals.userId,
 		page,
 		per_page,
 		query,
 	});
-	const surgeries = unparsedSurgeries.map((surgery) => ({
+	const surgeries = queryReturn.surgeries.map((surgery) => ({
 		...surgery,
 		_id: surgery._id.toHexString(),
 		userId: surgery.userId.toHexString(),
 	}));
 	return {
 		surgeries,
+		query: queryReturn.query,
+		page: queryReturn.page,
+		per_page: queryReturn.per_page,
+		totalPages: queryReturn.totalPages,
+		totalCount: queryReturn.totalCount,
 	};
 };
 
@@ -35,7 +40,16 @@ type QueryForSurgeries = {
 	per_page?: number;
 };
 
-async function queryForSurgeries(data: QueryForSurgeries): Promise<WithId<Surgery>[]> {
+type QueryForSurgeriesReturn = {
+	surgeries: WithId<Surgery>[];
+	query?: string;
+	page: number;
+	per_page: number;
+	totalPages: number;
+	totalCount: number;
+};
+
+async function queryForSurgeries(data: QueryForSurgeries): Promise<QueryForSurgeriesReturn> {
 	const { userId, query } = data;
 	let { page, per_page } = data;
 	if (!per_page || per_page < 1) {
@@ -75,5 +89,5 @@ async function queryForSurgeries(data: QueryForSurgeries): Promise<WithId<Surger
 		.skip(skip)
 		.limit(per_page)
 		.toArray();
-	return documents;
+	return { surgeries: documents, page, per_page, query, totalCount, totalPages };
 }

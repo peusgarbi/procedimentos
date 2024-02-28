@@ -17,6 +17,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			session: boolean;
+			userId: ObjectId;
 		}
 		// interface PageData {}
 		// interface PageState {}

@@ -6,7 +6,10 @@
 		href: string;
 	};
 
-	const menuItens: MenuItem[] = [{ label: "Home", href: "/" }];
+	const menuItens: MenuItem[] = [
+		{ label: "Home", href: "/" },
+		{ label: "Ponto", href: "/ponto" },
+	];
 </script>
 
 <nav class="pb-2">

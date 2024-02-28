@@ -6,6 +6,7 @@ declare global {
 		expiresAt: Date;
 		lastUsed: Date;
 		userAgent: string;
+		ip: string;
 	}
 
 	namespace App {

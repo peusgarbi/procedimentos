@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-	default: async ({ locals, cookies, request }) => {
+	default: async ({ locals, cookies, request, getClientAddress }) => {
 		if (locals.session) {
 			redirect(302, "/auth/login");
 		}
@@ -31,6 +31,7 @@ export const actions: Actions = {
 			lastUsed: nowJs,
 			expiresAt,
 			userAgent,
+			ip: getClientAddress(),
 		});
 
 		cookies.set("accessToken", newSession.insertedId.toHexString(), {

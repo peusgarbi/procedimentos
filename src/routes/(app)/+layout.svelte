@@ -1,3 +1,14 @@
+<script lang="ts">
+	import { page } from "$app/stores";
+
+	type MenuItem = {
+		label: string;
+		href: string;
+	};
+
+	const menuItens: MenuItem[] = [{ label: "Home", href: "/" }];
+</script>
+
 <nav class="pb-2">
 	<div class="daisy-navbar rounded-lg drop-shadow-md bg-base-100 w-full mx-auto">
 		<div class="flex-1">
@@ -37,8 +48,15 @@
 			<ul class="daisy-menu daisy-menu-horizontal px-1">
 				<li>
 					<details>
-						<summary> Parent </summary>
+						<summary> Menu </summary>
 						<ul class="p-2 bg-base-100 rounded-t-none">
+							{#each menuItens as item}
+								{#if item.href === $page.url.pathname}
+									<li><a class="bg-gray-200" href={item.href}>{item.label}</a></li>
+								{:else}
+									<li><a href={item.href}>{item.label}</a></li>
+								{/if}
+							{/each}
 							<li><button formaction="/auth/logout">Logout</button></li>
 						</ul>
 					</details>

@@ -11,8 +11,9 @@ interface GetMongoDbError {
 	message: string;
 }
 
+const client = new MongoClient(mongodbConnectionString);
+
 export async function getMongoDb(): Promise<GetMongoDbSuccess | GetMongoDbError> {
-	const client = new MongoClient(mongodbConnectionString);
 	try {
 		await client.connect();
 		return { error: false, client: client };

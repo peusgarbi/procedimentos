@@ -1,7 +1,11 @@
 // See https://kit.svelte.dev/docs/types#app
+
+import type { ObjectId } from "mongodb";
+
 // for information about these interfaces
 declare global {
 	interface Session {
+		userId: ObjectId;
 		createdAt: Date;
 		expiresAt: Date;
 		lastUsed: Date;

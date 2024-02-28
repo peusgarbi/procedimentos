@@ -10,13 +10,15 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test": "vitest",
 		"lint": "prettier --check . && eslint .",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"combo": "pnpm format && pnpm lint && pnpm check"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@tailwindcss/typography": "^0.5.10",
+		"@types/bcrypt": "^5.0.2",
 		"@types/eslint": "^8.56.0",
 		"@types/luxon": "^3.4.2",
 		"@types/ua-parser-js": "^0.7.39",
@@ -42,6 +44,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"bcrypt": "^5.1.1",
 		"luxon": "^3.4.4",
 		"mongodb": "^6.3.0",
 		"theme-change": "^2.5.0",

@@ -1,7 +1,10 @@
+import { surgeryQuerySchema } from "$lib/server/forms/schemas/surgeryQuerySchema";
 import { getMongoDb } from "$lib/server/infra/database/mongodb/mongodb";
 import type { Filter, ObjectId, WithId } from "mongodb";
-import { error, redirect } from "@sveltejs/kit";
-import type { PageServerLoad } from "./$types";
+import type { Actions, PageServerLoad } from "./$types";
+import { error, fail, redirect } from "@sveltejs/kit";
+import { superValidate } from "sveltekit-superforms";
+import { zod } from "sveltekit-superforms/adapters";
 
 export const load: PageServerLoad = async ({ locals, url }) => {
 	if (!locals.session || !locals.userId) {
@@ -30,7 +33,24 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 		per_page: queryReturn.per_page,
 		totalPages: queryReturn.totalPages,
 		totalCount: queryReturn.totalCount,
+		form: await superValidate(zod(surgeryQuerySchema)),
 	};
+};
+
+export const actions: Actions = {
+	default: async ({ locals, url, request }) => {
+		if (!locals.session || !locals.userId) {
+			redirect(302, "/auth/login");
+		}
+		const form = await superValidate(request, zod(surgeryQuerySchema));
+		if (!form.valid) {
+			return fail(400, { form });
+		}
+
+		const newUrl = url;
+		newUrl.searchParams.set("query", form.data.query);
+		redirect(302, newUrl);
+	},
 };
 
 type QueryForSurgeries = {
@@ -72,7 +92,12 @@ async function queryForSurgeries(data: QueryForSurgeries): Promise<QueryForSurge
 	if (query) {
 		filter = {
 			...filter,
-			ni: { $regex: query, $options: "ix" },
+			$or: [
+				{ surgeryType: { $regex: query, $options: "ix" } },
+				{ diagnosis: { $regex: query, $options: "ix" } },
+				{ patient: { $regex: query, $options: "ix" } },
+				{ role: { $regex: query, $options: "ix" } },
+			],
 		};
 	}
 

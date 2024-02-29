@@ -6,8 +6,9 @@ import { DateTime } from "luxon";
 
 type Ponto = {
 	userId: ObjectId;
-	timestamp: Date;
-	type: "IN" | "OUT";
+	entryTimestamp: Date;
+	exitTimestamp: Date | null;
+	type: "WORK";
 };
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -21,14 +22,21 @@ export const load: PageServerLoad = async ({ locals }) => {
 	}
 
 	const pontos = mongodbReturn.client.db("procedimentos").collection<Ponto>("pontos");
-	const lastPonto = await pontos.findOne({ userId: locals.userId }, { sort: { _id: -1 } });
+	const unparsedPonto = await pontos.findOne({ userId: locals.userId }, { sort: { _id: -1 } });
+	if (!unparsedPonto) {
+		return {
+			lastPonto: null,
+		};
+	}
+
+	const lastPonto = {
+		...unparsedPonto,
+		userId: unparsedPonto.userId.toHexString(),
+		_id: unparsedPonto._id.toHexString(),
+	};
 
 	return {
-		lastPonto: {
-			type: lastPonto?.type || "OUT",
-			timestamp: lastPonto?.timestamp || new Date(),
-		},
-		firstTimeUsingPonto: lastPonto ? false : true,
+		lastPonto,
 	};
 };
 
@@ -46,12 +54,17 @@ export const actions: Actions = {
 
 			const pontos = mongodbReturn.client.db("procedimentos").collection<Ponto>("pontos");
 			const lastPonto = await pontos.findOne({ userId: locals.userId }, { sort: { _id: -1 } });
-			const timestamp = DateTime.local({ locale: "pt-BR", zone: "America/Sao_Paulo" }).toJSDate();
-			await pontos.insertOne({
-				timestamp,
-				userId: locals.userId,
-				type: lastPonto?.type === "IN" ? "OUT" : "IN",
-			});
+			const now = DateTime.local({ locale: "pt-BR", zone: "America/Sao_Paulo" }).toJSDate();
+			if (!lastPonto || lastPonto.exitTimestamp) {
+				await pontos.insertOne({
+					entryTimestamp: now,
+					exitTimestamp: null,
+					userId: locals.userId,
+					type: "WORK",
+				});
+			} else {
+				await pontos.updateOne({ _id: lastPonto._id }, { $set: { exitTimestamp: now } });
+			}
 		} catch (err) {
 			console.error(err);
 			error(500, "Erro ao tentar bater ponto");

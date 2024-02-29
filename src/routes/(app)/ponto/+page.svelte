@@ -36,7 +36,9 @@
 				<ul>
 					<li>
 						<span class="font-semibold">Seu último ponto: </span>
-						{#if data.lastPonto}
+						{#if data.lastPonto?.exitTimestamp}
+							{lastPontoExit.toFormat("dd/MM/yyyy - hh:mm:ss")}
+						{:else if data.lastPonto?.entryTimestamp}
 							{lastPontoEntry.toFormat("dd/MM/yyyy - hh:mm:ss")}
 						{:else}
 							Você nunca bateu ponto!

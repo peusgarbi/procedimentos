@@ -29,6 +29,74 @@ export const load: PageServerLoad = async ({ locals }) => {
 		};
 	}
 
+	const totalWorkedSeconds = await pontos
+		.aggregate<{ totalWorkedTime: number }>([
+			{
+				$match: {
+					userId: locals.userId,
+				},
+			},
+			{
+				$addFields: {
+					elapsedTime: {
+						$dateDiff: {
+							startDate: "$entryTimestamp",
+							endDate: "$exitTimestamp",
+							unit: "second",
+						},
+					},
+				},
+			},
+			{
+				$project: {
+					elapsedTime: 1,
+				},
+			},
+			{
+				$group: {
+					_id: null,
+					totalWorkedTime: {
+						$sum: "$elapsedTime",
+					},
+				},
+			},
+		])
+		.toArray();
+
+	const averageWorkedSeconds = await pontos
+		.aggregate<{ averageWorkedTime: number }>([
+			{
+				$match: {
+					userId: locals.userId,
+				},
+			},
+			{
+				$addFields: {
+					elapsedTime: {
+						$dateDiff: {
+							startDate: "$entryTimestamp",
+							endDate: "$exitTimestamp",
+							unit: "second",
+						},
+					},
+				},
+			},
+			{
+				$project: {
+					elapsedTime: 1,
+				},
+			},
+			{
+				$group: {
+					_id: null,
+					averageWorkedTime: {
+						$avg: "$elapsedTime",
+					},
+				},
+			},
+		])
+		.toArray();
+
 	const lastPonto = {
 		...unparsedPonto,
 		userId: unparsedPonto.userId.toHexString(),
@@ -37,6 +105,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 	return {
 		lastPonto,
+		totalWorkedSeconds: totalWorkedSeconds[0].totalWorkedTime,
+		averageWorkedSeconds: averageWorkedSeconds[0].averageWorkedTime,
 	};
 };
 

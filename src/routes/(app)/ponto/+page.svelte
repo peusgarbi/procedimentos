@@ -5,6 +5,8 @@
 
 	export let data: PageData;
 
+	const totalWorkedTime = Duration.fromObject({ seconds: data.totalWorkedSeconds }).rescale();
+	const averageWorkingTime = Duration.fromObject({ seconds: data.averageWorkedSeconds }).rescale();
 	const lastPontoEntry = DateTime.fromJSDate(data.lastPonto?.entryTimestamp || new Date(), {
 		zone: "America/Sao_Paulo",
 	}).setLocale("pt-BR");
@@ -28,7 +30,7 @@
 	});
 </script>
 
-<main>
+<main class="flex flex-col gap-4">
 	<div class="w-full max-w-xl mx-auto rounded-lg shadow-xl bg-base-100">
 		<div class="daisy-card-body">
 			<h2 class="text-3xl daisy-card-title">Bater Ponto!</h2>
@@ -98,6 +100,22 @@
 					<button type="submit" class="daisy-btn daisy-btn-success">Descansar!</button>
 				{/if}
 			</form>
+		</div>
+	</div>
+
+	<div class="w-full max-w-xl mx-auto rounded-lg shadow-xl bg-base-100">
+		<div class="prose daisy-card-body">
+			<h2 class="text-3xl daisy-card-title">Estatísticas:</h2>
+			<ul>
+				<li>
+					Tempo total trabalhado: {totalWorkedTime.days}d {totalWorkedTime.hours}h {totalWorkedTime.minutes}m
+					{totalWorkedTime.seconds}s
+				</li>
+				<li>
+					Média por sessão de trabalho: {averageWorkingTime.days}d {averageWorkingTime.hours}h {averageWorkingTime.minutes}m
+					{averageWorkingTime.seconds}s
+				</li>
+			</ul>
 		</div>
 	</div>
 </main>

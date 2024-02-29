@@ -68,25 +68,25 @@
 						<span class="font-mono text-4xl daisy-countdown">
 							<span style="--value:{duration.days};"></span>
 						</span>
-						dias
+						{duration.days === 1 ? "dia" : "dias"}
 					</div>
 					<div>
 						<span class="font-mono text-4xl daisy-countdown">
 							<span style="--value:{duration.hours};"></span>
 						</span>
-						horas
+						{duration.hours === 1 ? "hora" : "horas"}
 					</div>
 					<div>
 						<span class="font-mono text-4xl daisy-countdown">
 							<span style="--value:{duration.minutes};"></span>
 						</span>
-						minutos
+						{duration.minutes === 1 ? "minuto" : "minutos"}
 					</div>
 					<div>
 						<span class="font-mono text-4xl daisy-countdown">
 							<span style="--value:{duration.seconds};"></span>
 						</span>
-						segundos
+						{duration.seconds === 1 ? "segundo" : "segundos"}
 					</div>
 				</div>
 			{/if}

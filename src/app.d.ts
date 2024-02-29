@@ -19,7 +19,10 @@ declare global {
 		role: string;
 		diagnosis: string;
 		patient: string;
-		date: Date;
+		startTime: Date;
+		endTime: Date;
+		durationInSeconds: number;
+		createdAt: Date;
 	}
 
 	interface User {

@@ -43,10 +43,10 @@
 	<form
 		method="POST"
 		enctype="multipart/form-data"
-		class="w-full max-w-xl mx-auto flex flex-col gap-4"
+		class="flex flex-col w-full max-w-xl gap-4 mx-auto"
 		use:enhance
 	>
-		<div class="rounded-lg w-full bg-base-100 shadow-xl">
+		<div class="w-full rounded-lg shadow-xl bg-base-100">
 			<div class="daisy-card-body">
 				<h2 class="daisy-card-title">Registrar Cirurgia</h2>
 
@@ -59,7 +59,7 @@
 				></Select>
 				<input name="surgeryType" bind:value={$form.surgeryType} hidden />
 				{#if $errors.surgeryType}
-					<p transition:slide class="text-red-400 text-center">{$errors.surgeryType}</p>
+					<p transition:slide class="text-center text-red-400">{$errors.surgeryType}</p>
 				{/if}
 
 				{#if $form.surgeryType === "Outro"}
@@ -68,10 +68,10 @@
 						type="text"
 						name="otherSurgeryType"
 						bind:value={$form.otherSurgeryType}
-						class="daisy-input daisy-input-bordered w-full"
+						class="w-full daisy-input daisy-input-bordered"
 					/>
 					{#if $errors.otherSurgeryType}
-						<p transition:slide class="text-red-400 text-center">{$errors.otherSurgeryType}</p>
+						<p transition:slide class="text-center text-red-400">{$errors.otherSurgeryType}</p>
 					{/if}
 				{/if}
 
@@ -80,7 +80,7 @@
 				></Select>
 				<input name="role" bind:value={$form.role} hidden />
 				{#if $errors.role}
-					<p transition:slide class="text-red-400 text-center">{$errors.role}</p>
+					<p transition:slide class="text-center text-red-400">{$errors.role}</p>
 				{/if}
 
 				{#if $form.role === "Outro"}
@@ -89,10 +89,10 @@
 						type="text"
 						name="otherRole"
 						bind:value={$form.otherRole}
-						class="daisy-input daisy-input-bordered w-full"
+						class="w-full daisy-input daisy-input-bordered"
 					/>
 					{#if $errors.otherRole}
-						<p transition:slide class="text-red-400 text-center">{$errors.otherRole}</p>
+						<p transition:slide class="text-center text-red-400">{$errors.otherRole}</p>
 					{/if}
 				{/if}
 
@@ -101,10 +101,10 @@
 					type="text"
 					name="patientInitials"
 					bind:value={$form.patientInitials}
-					class="daisy-input daisy-input-bordered w-full"
+					class="w-full daisy-input daisy-input-bordered"
 				/>
 				{#if $errors.patientInitials}
-					<p transition:slide class="text-red-400 text-center">{$errors.patientInitials}</p>
+					<p transition:slide class="text-center text-red-400">{$errors.patientInitials}</p>
 				{/if}
 
 				<label for="diagnosis">Diagnóstico</label>
@@ -112,19 +112,41 @@
 					type="text"
 					name="diagnosis"
 					bind:value={$form.diagnosis}
-					class="daisy-input daisy-input-bordered w-full"
+					class="w-full daisy-input daisy-input-bordered"
 				/>
 				{#if $errors.diagnosis}
-					<p transition:slide class="text-red-400 text-center">{$errors.diagnosis}</p>
+					<p transition:slide class="text-center text-red-400">{$errors.diagnosis}</p>
+				{/if}
+
+				<label for="startTime">Horário de início</label>
+				<input
+					type="datetime-local"
+					name="startTime"
+					bind:value={$form.startTime}
+					class="w-full daisy-input daisy-input-bordered"
+				/>
+				{#if $errors.startTime}
+					<p transition:slide class="text-center text-red-400">{$errors.startTime}</p>
+				{/if}
+
+				<label for="endTime">Horário de término</label>
+				<input
+					type="datetime-local"
+					name="endTime"
+					bind:value={$form.endTime}
+					class="w-full daisy-input daisy-input-bordered"
+				/>
+				{#if $errors.endTime}
+					<p transition:slide class="text-center text-red-400">{$errors.endTime}</p>
 				{/if}
 
 				<label for="otherRole">Deseja anexar um arquivo de comprovação?</label>
-				<input type="file" name="file" />
+				<input type="file" name="file" class="w-full daisy-file-input daisy-file-input-bordered" />
 				{#if $errors.file}
-					<p transition:slide class="text-red-400 text-center">{$errors.file}</p>
+					<p transition:slide class="text-center text-red-400">{$errors.file}</p>
 				{/if}
 
-				<div class="daisy-card-actions justify-end">
+				<div class="justify-end daisy-card-actions">
 					{#if $delayed}
 						<button class="daisy-btn daisy-btn-square">
 							<span class="daisy-loading daisy-loading-spinner"></span>

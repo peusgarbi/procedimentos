@@ -2,10 +2,10 @@
 	import Pagination from "$lib/components/Pagination.svelte";
 	import toast, { Toaster } from "svelte-french-toast";
 	import { superForm } from "sveltekit-superforms";
+	import { DateTime, Duration } from "luxon";
 	import { slide } from "svelte/transition";
 	import type { PageData } from "./$types";
 	import { page } from "$app/stores";
-	import { DateTime } from "luxon";
 
 	export let data: PageData;
 
@@ -63,7 +63,9 @@
 					<th>Papel</th>
 					<th>Diagnóstico</th>
 					<th>Paciente</th>
-					<th>Data</th>
+					<th>Início</th>
+					<th>Término</th>
+					<th>Duração</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -74,9 +76,19 @@
 						<td>{surgery.diagnosis}</td>
 						<td>{surgery.patient}</td>
 						<td
-							>{DateTime.fromJSDate(surgery.date, { zone: "America/Sao_Paulo" })
+							>{DateTime.fromJSDate(surgery.startTime, { zone: "America/Sao_Paulo" })
 								.setLocale("pt-BR")
 								.toFormat("dd/MM/yyyy - HH:mm:ss")}</td
+						>
+						<td
+							>{DateTime.fromJSDate(surgery.endTime, { zone: "America/Sao_Paulo" })
+								.setLocale("pt-BR")
+								.toFormat("dd/MM/yyyy - HH:mm:ss")}</td
+						>
+						<td
+							>{Duration.fromObject({ seconds: surgery.durationInSeconds }).toFormat(
+								"hh:mm:ss",
+							)}</td
 						>
 					</tr>
 				{/each}

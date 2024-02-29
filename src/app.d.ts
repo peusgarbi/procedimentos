@@ -22,6 +22,11 @@ declare global {
 		date: Date;
 	}
 
+	interface User {
+		email: string;
+		password: string;
+	}
+
 	namespace App {
 		// interface Error {}
 		interface Locals {

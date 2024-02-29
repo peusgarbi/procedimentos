@@ -9,13 +9,14 @@
 	const menuItens: MenuItem[] = [
 		{ label: "Home", href: "/" },
 		{ label: "Ponto", href: "/ponto" },
+		{ label: "Mudar senha", href: "/users/@me/change-password" },
 	];
 </script>
 
 <nav class="pb-2">
-	<div class="daisy-navbar rounded-lg drop-shadow-md bg-base-100 w-full mx-auto">
+	<div class="w-full mx-auto rounded-lg daisy-navbar drop-shadow-md bg-base-100">
 		<div class="flex-1">
-			<a href="/" class="daisy-btn daisy-btn-ghost text-xl">Procedimentos</a>
+			<a href="/" class="text-xl daisy-btn daisy-btn-ghost">Procedimentos</a>
 		</div>
 
 		<label class="daisy-swap daisy-swap-rotate">
@@ -28,7 +29,7 @@
 
 			<!-- sun icon -->
 			<svg
-				class="daisy-swap-on fill-current w-6 h-6"
+				class="w-6 h-6 fill-current daisy-swap-on"
 				xmlns="http://www.w3.org/2000/svg"
 				viewBox="0 0 24 24"
 				><path
@@ -38,7 +39,7 @@
 
 			<!-- moon icon -->
 			<svg
-				class="daisy-swap-off fill-current w-6 h-6"
+				class="w-6 h-6 fill-current daisy-swap-off"
 				xmlns="http://www.w3.org/2000/svg"
 				viewBox="0 0 24 24"
 				><path
@@ -48,11 +49,11 @@
 		</label>
 
 		<form method="POST" class="flex-none">
-			<ul class="daisy-menu daisy-menu-horizontal px-1">
+			<ul class="px-1 daisy-menu daisy-menu-horizontal">
 				<li>
 					<details>
 						<summary> Menu </summary>
-						<ul class="p-2 bg-base-100 rounded-t-none">
+						<ul class="p-2 rounded-t-none bg-base-100">
 							{#each menuItens as item}
 								{#if item.href === $page.url.pathname}
 									<li><a class="bg-gray-200" href={item.href}>{item.label}</a></li>

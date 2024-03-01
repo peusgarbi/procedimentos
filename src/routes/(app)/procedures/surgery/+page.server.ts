@@ -56,6 +56,6 @@ export const actions: Actions = {
 			await uploadFile(form.data.file, locals.userId.toHexString(), fileName);
 		}
 
-		redirect(302, "/users/@me?message=Cirurgia registrada com sucesso!");
+		redirect(302, "/users/@me/surgeries?message=Cirurgia registrada com sucesso!");
 	},
 };

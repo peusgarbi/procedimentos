@@ -7,7 +7,7 @@
 	const buttons: Button[] = [
 		{ label: "Bater Ponto", href: "/ponto" },
 		{ label: "Registrar Procedimento", href: "/procedures" },
-		{ label: "Meus Registros", href: "/users/@me" },
+		{ label: "Meus Registros", href: "/users/@me/surgeries" },
 		{ label: "Mudar senha", href: "/users/@me/change-password" },
 	];
 </script>

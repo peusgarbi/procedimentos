@@ -1,6 +1,7 @@
 import { surgeryRegisterSchema } from "$lib/server/forms/schemas/surgeryRegisterSchema";
 import { getMongoDb } from "$lib/server/infra/database/mongodb/mongodb";
 import type { Actions, PageServerLoad } from "./$types";
+import { uploadFile } from "$lib/server/gateway/bunny";
 import { error, fail, redirect } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
@@ -32,7 +33,7 @@ export const actions: Actions = {
 			error(500, "Erro ao tentar conectar com o banco de dados");
 		}
 		const surgeries = mongoDbReturn.client.db("procedimentos").collection<Surgery>("surgeries");
-		await surgeries.insertOne({
+		const insertedSurgery = await surgeries.insertOne({
 			createdAt: new Date(),
 			startTime: form.data.startTime,
 			endTime: form.data.endTime,
@@ -47,7 +48,14 @@ export const actions: Actions = {
 			surgeryType: form.data.otherSurgeryType ? form.data.otherSurgeryType : form.data.surgeryType,
 			role: form.data.otherRole ? form.data.otherRole : form.data.role,
 			userId: locals.userId,
+			fileExtension: form.data.file?.name.split(".").pop() || null,
 		});
+
+		if (form.data.file) {
+			const fileName = `${insertedSurgery.insertedId.toHexString()}.${form.data.file.name.split(".")[1]}`;
+			await uploadFile(form.data.file, locals.userId.toHexString(), fileName);
+		}
+
 		redirect(302, "/users/@me?message=Cirurgia registrada com sucesso!");
 	},
 };

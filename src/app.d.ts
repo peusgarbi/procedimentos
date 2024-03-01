@@ -23,6 +23,7 @@ declare global {
 		endTime: Date;
 		durationInSeconds: number;
 		createdAt: Date;
+		fileExtension: string | null;
 	}
 
 	interface User {

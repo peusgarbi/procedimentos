@@ -1,6 +1,8 @@
 <script lang="ts">
 	import Pagination from "$lib/components/Pagination.svelte";
+	import Download from "$lib/components/Download.svelte";
 	import toast, { Toaster } from "svelte-french-toast";
+	import Cancel from "$lib/components/Cancel.svelte";
 	import { superForm } from "sveltekit-superforms";
 	import { DateTime, Duration } from "luxon";
 	import { slide } from "svelte/transition";
@@ -66,6 +68,7 @@
 					<th>Início</th>
 					<th>Término</th>
 					<th>Duração</th>
+					<th>Arquivo</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -90,6 +93,17 @@
 								"hh:mm:ss",
 							)}</td
 						>
+						{#if surgery.fileExtension}
+							<td
+								><a
+									href={`/api/v1/file/${surgery._id}.${surgery.fileExtension}`}
+									target="_blank"
+									class="hover:-translate-y-[1px]"><Download size={20} /></a
+								></td
+							>
+						{:else}
+							<td><Cancel size={20} /></td>
+						{/if}
 					</tr>
 				{/each}
 			</tbody>

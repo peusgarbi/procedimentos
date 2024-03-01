@@ -52,7 +52,7 @@ export const actions: Actions = {
 		});
 
 		if (form.data.file) {
-			const fileName = `${insertedSurgery.insertedId.toHexString()}.${form.data.file.name.split(".")[1]}`;
+			const fileName = `${insertedSurgery.insertedId.toHexString()}.${form.data.file.name.split(".").pop()}`;
 			await uploadFile(form.data.file, locals.userId.toHexString(), fileName);
 		}
 

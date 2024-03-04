@@ -8,6 +8,7 @@
 		{ label: "Bater Ponto", href: "/ponto" },
 		{ label: "Registrar Procedimento", href: "/procedures" },
 		{ label: "Meus Registros", href: "/users/@me/surgeries" },
+		{ label: "Tarefas", href: "/tasks" },
 		{ label: "Mudar senha", href: "/users/@me/change-password" },
 	];
 </script>

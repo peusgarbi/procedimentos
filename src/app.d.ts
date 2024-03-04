@@ -31,6 +31,15 @@ declare global {
 		password: string;
 	}
 
+	interface Task {
+		name: string;
+		description: string;
+		priority: "LOW" | "MEDIUM" | "HIGH";
+		dueDate: Date | null;
+		completed: boolean;
+		createdAt: Date;
+	}
+
 	interface Ponto {
 		userId: ObjectId;
 		entryTimestamp: Date;

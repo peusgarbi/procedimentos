@@ -47,6 +47,24 @@ declare global {
 		type: "WORK";
 	}
 
+	interface Admission {
+		hospital: string;
+		identification: string;
+		responsableDoctor: string;
+		bed: string;
+		medications: string;
+		diagnosticHypothesis: string;
+		history: string;
+		personalBackground: string;
+		proceduresPerformed: string;
+		clinicalExamination: string;
+		imaging: string;
+		labs: string;
+		therapeuticPlan: string;
+		evolutions: string[];
+		discharged: boolean;
+	}
+
 	namespace App {
 		// interface Error {}
 		interface Locals {

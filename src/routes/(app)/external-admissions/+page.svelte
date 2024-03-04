@@ -95,7 +95,7 @@
 
 	{#each data.externalAdmissions as admission, caseIndex}
 		<div class="daisy-collapse daisy-collapse-arrow bg-base-200">
-			<input type="radio" name="admission-{caseIndex}" />
+			<input type="radio" name="my-accordion-1" />
 			<div class="text-xl font-medium daisy-collapse-title">
 				{admission.hospital} - {admission.identification}
 				{#if admission.discharged}

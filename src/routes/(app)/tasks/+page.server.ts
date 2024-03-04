@@ -1,7 +1,9 @@
 import { getMongoDb } from "$lib/server/infra/database/mongodb/mongodb";
+import { editMessage } from "$lib/server/gateway/telegram";
 import type { Actions, PageServerLoad } from "./$types";
 import { ObjectId, type Filter } from "mongodb";
 import { error, redirect } from "@sveltejs/kit";
+import { DateTime } from "luxon";
 
 export const load: PageServerLoad = async ({ locals, url }) => {
 	if (!locals.session || !locals.userId) {
@@ -63,12 +65,34 @@ export const actions: Actions = {
 			error(500, "Erro ao tentar conectar com o banco de dados");
 		}
 		const tasksCollection = mongoDbReturn.client.db("procedimentos").collection<Task>("tasks");
-		const currentTaskState = await tasksCollection.findOne(
-			{ _id: new ObjectId(taskId) },
-			{ projection: { _id: 0, completedAt: 1 } },
-		);
+		const currentTaskState = await tasksCollection.findOne({ _id: new ObjectId(taskId) });
 		if (!currentTaskState) {
 			error(404, "Tarefa não encontrada, impossível atualizar");
+		}
+
+		if (currentTaskState.telegramMessageId) {
+			await editMessage(
+				currentTaskState.telegramMessageId,
+				`TAREFA CRIADA\n
+			- NOME: ${currentTaskState.name}
+			- DESCRIÇÃO: ${currentTaskState.description}
+			- PRIORIDADE: ${currentTaskState.priority}
+			- CRIADA EM: ${DateTime.fromJSDate(new Date(), {
+				zone: "America/Sao_Paulo",
+			})
+				.setLocale("pt-BR")
+				.toFormat("dd/MM/yyyy - HH:mm:ss")}
+			- REALIZAR ATÉ: ${
+				currentTaskState.dueDate
+					? DateTime.fromJSDate(currentTaskState.dueDate, {
+							zone: "America/Sao_Paulo",
+						})
+							.setLocale("pt-BR")
+							.toFormat("dd/MM/yyyy - HH:mm:ss")
+					: "Não informado"
+			}\n
+			${currentTaskState.completedAt ? "PENDENTE" : "CONCLUÍDA"}`,
+			);
 		}
 
 		await tasksCollection.updateOne(

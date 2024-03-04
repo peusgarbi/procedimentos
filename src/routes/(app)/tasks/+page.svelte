@@ -142,8 +142,8 @@
 					</thead>
 					<tbody>
 						<!-- row 1 -->
-						<tr>
-							{#each data.tasks as task, taskIndex}
+						{#each data.tasks as task, taskIndex}
+							<tr>
 								<th>
 									<label>
 										<input
@@ -202,8 +202,8 @@
 										</button>
 									</form>
 								</td>
-							{/each}
-						</tr>
+							</tr>
+						{/each}
 					</tbody>
 				</table>
 			</div>

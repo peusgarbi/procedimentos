@@ -38,6 +38,7 @@ declare global {
 		dueDate: Date | null;
 		createdAt: Date;
 		completedAt: Date | null;
+		telegramMessageId: number | undefined;
 	}
 
 	interface Ponto {

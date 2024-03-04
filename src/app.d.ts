@@ -31,6 +31,13 @@ declare global {
 		password: string;
 	}
 
+	interface Ponto {
+		userId: ObjectId;
+		entryTimestamp: Date;
+		exitTimestamp: Date | null;
+		type: "WORK";
+	}
+
 	namespace App {
 		// interface Error {}
 		interface Locals {

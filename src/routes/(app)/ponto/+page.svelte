@@ -94,6 +94,7 @@
 			{/if}
 
 			<form method="POST" class="justify-end daisy-card-actions">
+				<a class="daisy-btn daisy-btn-primary" href="/users/@me/pontos">Meus pontos</a>
 				{#if !data.lastPonto || data.lastPonto.exitTimestamp}
 					<button type="submit" class="daisy-btn daisy-btn-warning">Trabalhar!</button>
 				{:else}

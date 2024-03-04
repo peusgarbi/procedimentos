@@ -1,15 +1,7 @@
 import { getMongoDb } from "$lib/server/infra/database/mongodb/mongodb";
 import type { Actions, PageServerLoad } from "./$types";
 import { error, redirect } from "@sveltejs/kit";
-import type { ObjectId } from "mongodb";
 import { DateTime } from "luxon";
-
-type Ponto = {
-	userId: ObjectId;
-	entryTimestamp: Date;
-	exitTimestamp: Date | null;
-	type: "WORK";
-};
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.session || !locals.userId) {

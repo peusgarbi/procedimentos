@@ -1,7 +1,7 @@
 import { getMongoDb } from "$lib/server/infra/database/mongodb/mongodb";
-import type { Filter, ObjectId, WithId } from "mongodb";
+import { ObjectId, type Filter, type WithId } from "mongodb";
+import type { Actions, PageServerLoad } from "./$types";
 import { error, redirect } from "@sveltejs/kit";
-import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals, url }) => {
 	if (!locals.session || !locals.userId) {
@@ -34,6 +34,32 @@ type QueryForPontos = {
 	userId: ObjectId;
 	page: number;
 	per_page: number;
+};
+
+export const actions: Actions = {
+	deletePonto: async ({ locals, url }) => {
+		if (!locals.session || !locals.userId) {
+			redirect(302, "/auth/login");
+		}
+
+		const id = url.searchParams.get("id");
+		if (!id) {
+			error(404, "ID Inválido");
+		}
+		const isValidObjectId = ObjectId.isValid(id);
+		if (!isValidObjectId) {
+			error(404, "ID Inválido");
+		}
+
+		const mongoDbReturn = await getMongoDb();
+		if (mongoDbReturn.error) {
+			error(500, "Erro ao tentar conectar com o banco de dados");
+		}
+		const pontos = mongoDbReturn.client.db("procedimentos").collection<Surgery>("pontos");
+		await pontos.deleteOne({ _id: new ObjectId(id), userId: locals.userId });
+
+		redirect(302, "/users/@me/pontos?message=Ponto deletado com sucesso!");
+	},
 };
 
 type QueryForPontosReturn = {

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const surgeryRegisterSchema = z
 	.object({
-		patientInitials: z.string({ required_error: "Campo obrigatório" }).trim(),
+		patient: z.string({ required_error: "Campo obrigatório" }).trim(),
 		diagnosis: z.string({ required_error: "Campo obrigatório" }).trim(),
 		surgeryType: z.string({ required_error: "Campo obrigatório" }).trim(),
 		otherSurgeryType: z.string().trim().optional().nullable(),

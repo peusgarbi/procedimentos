@@ -3,6 +3,7 @@
 	import { slide } from "svelte/transition";
 	import type { PageData } from "./$types";
 	import Select from "svelte-select";
+	import { DateTime } from "luxon";
 
 	export let data: PageData;
 
@@ -37,6 +38,9 @@
 	];
 
 	const groupBy = (item: SurgeryItem) => item.group;
+
+	const currentSurgery = $form.surgeryType;
+	const currentRole = $form.role;
 </script>
 
 <main>
@@ -50,7 +54,10 @@
 			<div class="daisy-card-body">
 				<h2 class="daisy-card-title">Registrar Cirurgia</h2>
 
-				<label for="surgeryType">Qual foi a cirurgia realizada?</label>
+				<label for="surgeryType"
+					>Qual foi a cirurgia realizada? <span class="font-semibold">Atual: {currentSurgery}</span
+					></label
+				>
 				<Select
 					items={surgeryItems}
 					{groupBy}
@@ -75,7 +82,9 @@
 					{/if}
 				{/if}
 
-				<label for="role">Qual foi seu papel?</label>
+				<label for="role"
+					>Qual foi seu papel? <span class="font-semibold">Atual: {currentRole}</span></label
+				>
 				<Select items={roles} {groupBy} bind:justValue={$form.role} placeholder="Selecionar..."
 				></Select>
 				<input name="role" bind:value={$form.role} hidden />
@@ -96,7 +105,7 @@
 					{/if}
 				{/if}
 
-				<label for="patient">Iniciais do Paciente</label>
+				<label for="patient">Iniciais do Paciente?</label>
 				<input
 					type="text"
 					name="patient"
@@ -107,7 +116,7 @@
 					<p transition:slide class="text-center text-red-400">{$errors.patient}</p>
 				{/if}
 
-				<label for="diagnosis">Diagnóstico</label>
+				<label for="diagnosis">Diagnóstico?</label>
 				<input
 					type="text"
 					name="diagnosis"
@@ -118,7 +127,13 @@
 					<p transition:slide class="text-center text-red-400">{$errors.diagnosis}</p>
 				{/if}
 
-				<label for="startTime">Horário de início</label>
+				<label for="startTime"
+					>Horário de início? <span class="font-semibold"
+						>Atual: {DateTime.fromJSDate($form.startTime, { zone: "America/Sao_Paulo" })
+							.setLocale("pt-BR")
+							.toFormat("dd/MM/yyyy - HH:mm:ss")}</span
+					></label
+				>
 				<input
 					type="datetime-local"
 					name="startTime"
@@ -129,7 +144,13 @@
 					<p transition:slide class="text-center text-red-400">{$errors.startTime}</p>
 				{/if}
 
-				<label for="endTime">Horário de término</label>
+				<label for="endTime"
+					>Horário de término? <span class="font-semibold"
+						>Atual: {DateTime.fromJSDate($form.endTime, { zone: "America/Sao_Paulo" })
+							.setLocale("pt-BR")
+							.toFormat("dd/MM/yyyy - HH:mm:ss")}</span
+					></label
+				>
 				<input
 					type="datetime-local"
 					name="endTime"
@@ -140,11 +161,11 @@
 					<p transition:slide class="text-center text-red-400">{$errors.endTime}</p>
 				{/if}
 
-				<label for="otherRole">Deseja anexar um arquivo de comprovação?</label>
+				<!-- <label for="otherRole">Deseja anexar um arquivo de comprovação?</label>
 				<input type="file" name="file" class="w-full daisy-file-input daisy-file-input-bordered" />
 				{#if $errors.file}
 					<p transition:slide class="text-center text-red-400">{$errors.file}</p>
-				{/if}
+				{/if} -->
 
 				<div class="justify-end daisy-card-actions">
 					{#if $delayed}
@@ -152,7 +173,7 @@
 							<span class="daisy-loading daisy-loading-spinner"></span>
 						</button>
 					{:else}
-						<button type="submit" class="daisy-btn daisy-btn-primary">Registrar</button>
+						<button type="submit" class="daisy-btn daisy-btn-primary">Salvar</button>
 					{/if}
 				</div>
 			</div>

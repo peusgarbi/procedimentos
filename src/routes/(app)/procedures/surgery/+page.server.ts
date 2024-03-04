@@ -44,7 +44,7 @@ export const actions: Actions = {
 				.toDuration()
 				.as("seconds"),
 			diagnosis: form.data.diagnosis,
-			patient: form.data.patientInitials,
+			patient: form.data.patient,
 			surgeryType: form.data.otherSurgeryType ? form.data.otherSurgeryType : form.data.surgeryType,
 			role: form.data.otherRole ? form.data.otherRole : form.data.role,
 			userId: locals.userId,

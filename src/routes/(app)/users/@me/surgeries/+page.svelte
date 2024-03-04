@@ -1,13 +1,15 @@
 <script lang="ts">
+	import TrashBinSvg from "$lib/components/svg/TrashBinSvg.svelte";
 	import Pagination from "$lib/components/Pagination.svelte";
+	import EditSvg from "$lib/components/svg/EditSvg.svelte";
 	import Download from "$lib/components/Download.svelte";
 	import toast, { Toaster } from "svelte-french-toast";
-	import Cancel from "$lib/components/Cancel.svelte";
 	import { superForm } from "sveltekit-superforms";
 	import { DateTime, Duration } from "luxon";
 	import { slide } from "svelte/transition";
 	import type { PageData } from "./$types";
 	import { page } from "$app/stores";
+	import { onMount } from "svelte";
 
 	export let data: PageData;
 
@@ -19,11 +21,53 @@
 	$: if (messageParam) {
 		toast.success(messageParam);
 	}
+
+	let deleteModal: HTMLDialogElement;
+	let modalInfo = {
+		_id: "",
+		surgeryType: "",
+		role: "",
+		diagnosis: "",
+		patient: "",
+	};
+
+	onMount(() => {
+		deleteModal = document.getElementById("delete_modal") as HTMLDialogElement;
+	});
+
+	function openDeleteModal(data: typeof modalInfo) {
+		modalInfo = data;
+		deleteModal.showModal();
+	}
 </script>
 
 <Toaster />
+
+<dialog id="delete_modal" class="daisy-modal">
+	<div class="prose daisy-modal-box">
+		<h3 class="text-lg font-bold">Tem certeza que deseja deletar? Esta ação é irreversível!</h3>
+		<span class="py-4 text-sm">Pressione ESC ou Cancelar para sair</span>
+		<ul>
+			<li>Id: <span class="font-semibold">{modalInfo._id}</span></li>
+			<li>Tipo: <span class="font-semibold">{modalInfo.surgeryType}</span></li>
+			<li>Papel: <span class="font-semibold">{modalInfo.role}</span></li>
+			<li>Diagnóstico: <span class="font-semibold">{modalInfo.diagnosis}</span></li>
+			<li>Paciente: <span class="font-semibold">{modalInfo.patient}</span></li>
+		</ul>
+		<div class="daisy-modal-action">
+			<form method="dialog">
+				<!-- if there is a button in form, it will close the modal -->
+				<button class="daisy-btn">Cancelar</button>
+			</form>
+			<form method="POST" action="?/deleteSurgery&id={modalInfo._id}">
+				<button class="daisy-btn daisy-btn-error">Deletar</button>
+			</form>
+		</div>
+	</div>
+</dialog>
+
 <main class="flex flex-col gap-4">
-	<form method="POST" use:enhance>
+	<form method="POST" action="?/makeQuery" use:enhance>
 		<label
 			class="flex items-center w-full max-w-3xl gap-2 mx-auto daisy-input daisy-input-bordered"
 		>
@@ -68,7 +112,7 @@
 					<th>Início</th>
 					<th>Término</th>
 					<th>Duração</th>
-					<th>Arquivo</th>
+					<th>Opções</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -93,17 +137,21 @@
 								"hh:mm:ss",
 							)}</td
 						>
-						{#if surgery.fileExtension}
-							<td
-								><a
+						<td class="flex flex-row gap-1">
+							{#if surgery.fileExtension}
+								<a
 									href={`/api/v1/file/${surgery._id}.${surgery.fileExtension}`}
 									target="_blank"
 									class="hover:-translate-y-[1px]"><Download size={20} /></a
-								></td
-							>
-						{:else}
-							<td><Cancel size={20} /></td>
-						{/if}
+								>
+							{/if}
+							<a href="/users/@me/surgeries/{surgery._id}">
+								<EditSvg size={20} />
+							</a>
+							<button on:click={() => openDeleteModal(surgery)}>
+								<TrashBinSvg size={20} />
+							</button>
+						</td>
 					</tr>
 				{/each}
 			</tbody>

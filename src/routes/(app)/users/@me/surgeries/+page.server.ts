@@ -1,6 +1,6 @@
 import { surgeryQuerySchema } from "$lib/server/forms/schemas/surgeryQuerySchema";
 import { getMongoDb } from "$lib/server/infra/database/mongodb/mongodb";
-import type { Filter, ObjectId, WithId } from "mongodb";
+import { ObjectId, type Filter, type WithId } from "mongodb";
 import type { Actions, PageServerLoad } from "./$types";
 import { error, fail, redirect } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
@@ -38,7 +38,7 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 };
 
 export const actions: Actions = {
-	default: async ({ locals, url, request }) => {
+	makeQuery: async ({ locals, url, request }) => {
 		if (!locals.session || !locals.userId) {
 			redirect(302, "/auth/login");
 		}
@@ -50,6 +50,29 @@ export const actions: Actions = {
 		const newUrl = url;
 		newUrl.searchParams.set("query", form.data.query);
 		redirect(302, newUrl);
+	},
+	deleteSurgery: async ({ locals, url }) => {
+		if (!locals.session || !locals.userId) {
+			redirect(302, "/auth/login");
+		}
+
+		const id = url.searchParams.get("id");
+		if (!id) {
+			error(404, "ID Inválido");
+		}
+		const isValidObjectId = ObjectId.isValid(id);
+		if (!isValidObjectId) {
+			error(404, "ID Inválido");
+		}
+
+		const mongoDbReturn = await getMongoDb();
+		if (mongoDbReturn.error) {
+			error(500, "Erro ao tentar conectar com o banco de dados");
+		}
+		const surgeries = mongoDbReturn.client.db("procedimentos").collection<Surgery>("surgeries");
+		await surgeries.deleteOne({ _id: new ObjectId(id), userId: locals.userId });
+
+		redirect(302, "/users/@me/surgeries?message=Cirurgia deletada com sucesso!");
 	},
 };
 

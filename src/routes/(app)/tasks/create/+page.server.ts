@@ -37,7 +37,7 @@ export const actions: Actions = {
 			name: form.data.name,
 			dueDate: form.data.dueDate,
 			priority: form.data.priority,
-			completed: false,
+			completedAt: null,
 		});
 
 		redirect(302, "/tasks?message=Tarefa criada com sucesso!");

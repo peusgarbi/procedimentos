@@ -36,8 +36,8 @@ declare global {
 		description: string;
 		priority: "LOW" | "MEDIUM" | "HIGH";
 		dueDate: Date | null;
-		completed: boolean;
 		createdAt: Date;
+		completedAt: Date | null;
 	}
 
 	interface Ponto {

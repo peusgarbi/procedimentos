@@ -65,7 +65,7 @@ export const actions: Actions = {
 		const tasksCollection = mongoDbReturn.client.db("procedimentos").collection<Task>("tasks");
 		const currentTaskState = await tasksCollection.findOne(
 			{ _id: new ObjectId(taskId) },
-			{ projection: { _id: 0, completed: 1 } },
+			{ projection: { _id: 0, completedAt: 1 } },
 		);
 		if (!currentTaskState) {
 			error(404, "Tarefa não encontrada, impossível atualizar");
@@ -73,7 +73,7 @@ export const actions: Actions = {
 
 		await tasksCollection.updateOne(
 			{ _id: new ObjectId(taskId) },
-			{ $set: { completed: !currentTaskState.completed } },
+			{ $set: { completedAt: currentTaskState.completedAt ? null : new Date() } },
 		);
 	},
 };

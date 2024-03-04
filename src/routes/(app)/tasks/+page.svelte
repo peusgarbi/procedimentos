@@ -27,12 +27,85 @@
 		}
 	}, 1000);
 
+	let currentFocusedTask: number = 0;
+	function openTaskDescriptionDialog(taskIndex: number) {
+		currentFocusedTask = taskIndex;
+		const modal = document.getElementById("task_modal") as HTMLDialogElement;
+		modal.showModal();
+	}
+
 	onDestroy(() => {
 		clearInterval(timer);
 	});
 </script>
 
 <Toaster />
+
+<dialog id="task_modal" class="daisy-modal">
+	<div class="prose daisy-modal-box">
+		<h3 class="text-lg font-bold">Tem certeza que deseja deletar? Esta ação é irreversível!</h3>
+		<span class="py-4 text-sm">Pressione ESC ou Cancelar para sair</span>
+		<ul>
+			<li>Id: <span class="font-semibold">{data.tasks[currentFocusedTask]._id}</span></li>
+			<li>Nome: <span class="font-semibold">{data.tasks[currentFocusedTask].name}</span></li>
+			<li>
+				Descrição: <span class="font-semibold">{data.tasks[currentFocusedTask].description}</span>
+			</li>
+			<li>
+				Prioridade:
+				{#if data.tasks[currentFocusedTask].priority === "HIGH"}
+					<span class="font-semibold text-red-600">Alta</span>
+				{:else if data.tasks[currentFocusedTask].priority === "MEDIUM"}
+					<span class="font-semibold text-yellow-600">Média</span>
+				{:else if data.tasks[currentFocusedTask].priority === "LOW"}
+					<span class="font-semibold text-green-600">Baixa</span>
+				{/if}
+			</li>
+			<li>
+				Criada em: <span class="font-semibold"
+					>{DateTime.fromJSDate(data.tasks[currentFocusedTask].createdAt, {
+						zone: "America/Sao_Paulo",
+					})
+						.setLocale("pt-BR")
+						.toFormat("dd/MM/yyyy - HH:mm:ss")}</span
+				>
+			</li>
+			<li>
+				Resolver até: <span class="font-semibold">
+					{#if data.tasks[currentFocusedTask].dueDate}
+						{DateTime.fromJSDate(data.tasks[currentFocusedTask].dueDate || new Date(), {
+							zone: "America/Sao_Paulo",
+						})
+							.setLocale("pt-BR")
+							.toFormat("dd/MM/yyyy - HH:mm:ss")}
+					{:else}
+						Não cadastrado
+					{/if}
+				</span>
+			</li>
+			<li>
+				Concluída em: <span class="font-semibold">
+					{#if data.tasks[currentFocusedTask].completedAt}
+						{DateTime.fromJSDate(data.tasks[currentFocusedTask].completedAt || new Date(), {
+							zone: "America/Sao_Paulo",
+						})
+							.setLocale("pt-BR")
+							.toFormat("dd/MM/yyyy - HH:mm:ss")}
+					{:else}
+						Não concluída
+					{/if}
+				</span>
+			</li>
+		</ul>
+		<div class="daisy-modal-action">
+			<form method="dialog">
+				<!-- if there is a button in form, it will close the modal -->
+				<button class="daisy-btn">Cancelar</button>
+			</form>
+		</div>
+	</div>
+</dialog>
+
 <main class="flex flex-col gap-4 mx-auto">
 	<div class="shadow-xl daisy-card grow bg-base-100">
 		<div class="daisy-card-body">
@@ -70,24 +143,28 @@
 					<tbody>
 						<!-- row 1 -->
 						<tr>
-							{#each data.tasks as task}
+							{#each data.tasks as task, taskIndex}
 								<th>
 									<label>
 										<input
 											type="checkbox"
 											class="daisy-checkbox"
-											bind:checked={task.completed}
+											checked={task.completedAt ? true : false}
 											disabled
 										/>
 									</label>
 								</th>
 								<td>
-									<div class="flex items-center gap-3">
+									<button
+										type="button"
+										class="flex items-center gap-3"
+										on:click={() => openTaskDescriptionDialog(taskIndex)}
+									>
 										<div>
 											<div class="font-bold">{task.name}</div>
 											<!-- <div class="text-sm opacity-50">Name description</div> -->
 										</div>
-									</div>
+									</button>
 								</td>
 								<td>
 									{task.description}
@@ -117,7 +194,7 @@
 								<td>
 									<form method="POST" action="?/switchTaskState&taskId={task._id}">
 										<button type="submit" class="daisy-btn daisy-btn-default daisy-btn-xs">
-											{#if task.completed}
+											{#if task.completedAt}
 												Marcar como pendente
 											{:else}
 												Marcar como concluída

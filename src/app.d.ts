@@ -48,6 +48,14 @@ declare global {
 		type: "WORK";
 	}
 
+	interface Naso {
+		userId: ObjectId;
+		date: Date;
+		naso: number;
+		nasoLaringe: number;
+		estrobo: number;
+	}
+
 	interface Admission {
 		hospital: string;
 		identification: string;

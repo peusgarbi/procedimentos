@@ -10,6 +10,7 @@
 		{ label: "Meus Registros", href: "/users/@me/surgeries" },
 		{ label: "Tarefas", href: "/tasks" },
 		{ label: "Internações externas", href: "/external-admissions" },
+		{ label: "Sala da Naso", href: "/naso" },
 		{ label: "Mudar senha", href: "/users/@me/change-password" },
 	];
 </script>

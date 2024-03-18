@@ -1,13 +1,35 @@
 <script lang="ts">
 	import type { PageData } from "./$types";
+	import { DateTime } from "luxon";
 
 	export let data: PageData;
+
+	let dateInput: string = data.date;
+
+	const tryedDate = DateTime.fromFormat(data.date, "yyyy-MM-dd", {
+		locale: "pt-BR",
+		zone: "America/Sao_Paulo",
+	});
 </script>
 
 <main class="flex flex-col gap-4">
 	<div class="w-full max-w-4xl mx-auto rounded-lg shadow-xl bg-base-100">
 		<div class="daisy-card-body">
-			<h2 class="text-3xl daisy-card-title">Sala da Naso</h2>
+			<h2 class="text-3xl daisy-card-title">Sala da Naso - {tryedDate.toFormat("dd/MM/yyyy")}</h2>
+			<form
+				method="POST"
+				action="?/selectDate"
+				class="flex flex-row items-center justify-center gap-4"
+			>
+				<input
+					type="date"
+					name="dateInput"
+					placeholder="Selecionar data"
+					class="w-full max-w-xs daisy-input daisy-input-bordered"
+					bind:value={dateInput}
+				/>
+				<button type="submit" class="daisy-btn daisy-btn-primary">Mudar Data</button>
+			</form>
 			<div class="shadow daisy-stats">
 				<div class="daisy-stat">
 					<div class="daisy-stat-figure text-secondary">

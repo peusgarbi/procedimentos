@@ -13,16 +13,16 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 	const date = url.searchParams.get("date");
 	if (!date) {
 		const newUrl = new URL(url);
-		newUrl.searchParams.set("date", selectedDate.toFormat("yyyyMMdd"));
+		newUrl.searchParams.set("date", selectedDate.toFormat("yyyy-MM-dd"));
 		redirect(302, newUrl);
 	}
-	const tryedDate = DateTime.fromFormat(date, "yyyyMMdd", {
+	const tryedDate = DateTime.fromFormat(date, "yyyy-MM-dd", {
 		locale: "pt-BR",
 		zone: "America/Sao_Paulo",
 	});
 	if (!tryedDate.isValid) {
 		const newUrl = new URL(url);
-		newUrl.searchParams.set("date", selectedDate.toFormat("yyyyMMdd"));
+		newUrl.searchParams.set("date", selectedDate.toFormat("yyyy-MM-dd"));
 		redirect(302, newUrl);
 	}
 	selectedDate = tryedDate;
@@ -61,11 +61,31 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 
 	return {
 		nasos,
-		date: selectedDate.toFormat("yyyyMMdd"),
+		date: selectedDate.toFormat("yyyy-MM-dd"),
 	};
 };
 
 export const actions: Actions = {
+	selectDate: async ({ locals, request, url }) => {
+		if (!locals.session || !locals.userId) {
+			redirect(302, "/auth/login");
+		}
+		const formData = await request.formData();
+		const dateInput = formData.get("dateInput")?.toString();
+		if (!dateInput) {
+			error(400);
+		}
+		const tryedDate = DateTime.fromFormat(dateInput, "yyyy-MM-dd", {
+			locale: "pt-BR",
+			zone: "America/Sao_Paulo",
+		});
+		if (!tryedDate.isValid) {
+			error(400);
+		}
+		const newUrl = new URL(url);
+		newUrl.searchParams.set("date", tryedDate.toFormat("yyyy-MM-dd"));
+		redirect(302, newUrl);
+	},
 	incrementNaso: async ({ locals, url }) => {
 		if (!locals.session || !locals.userId) {
 			redirect(302, "/auth/login");
@@ -141,7 +161,7 @@ async function updateNumbers(
 	if (!date) {
 		return false;
 	}
-	const tryedDate = DateTime.fromFormat(date, "yyyyMMdd", {
+	const tryedDate = DateTime.fromFormat(date, "yyyy-MM-dd", {
 		locale: "pt-BR",
 		zone: "America/Sao_Paulo",
 	});

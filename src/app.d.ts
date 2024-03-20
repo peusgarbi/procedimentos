@@ -55,6 +55,7 @@ declare global {
 		naso: number;
 		nasoLaringe: number;
 		estrobo: number;
+		otofibroscopia: number;
 	}
 
 	interface CC {

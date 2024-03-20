@@ -50,6 +50,7 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 			estrobo: 0,
 			naso: 0,
 			nasoLaringe: 0,
+			otofibroscopia: 0,
 		});
 		redirect(302, url);
 	}
@@ -146,12 +147,32 @@ export const actions: Actions = {
 			error(400);
 		}
 	},
+	incrementOto: async ({ locals, url }) => {
+		if (!locals.session || !locals.userId) {
+			redirect(302, "/auth/login");
+		}
+		const date = url.searchParams.get("date");
+		const success = await updateNumbers(date, locals.userId, "OTOFIBRO", "INCREMENT");
+		if (!success) {
+			error(400);
+		}
+	},
+	decrementOto: async ({ locals, url }) => {
+		if (!locals.session || !locals.userId) {
+			redirect(302, "/auth/login");
+		}
+		const date = url.searchParams.get("date");
+		const success = await updateNumbers(date, locals.userId, "OTOFIBRO", "DECREMENT");
+		if (!success) {
+			error(400);
+		}
+	},
 };
 
 async function updateNumbers(
 	date: string | null,
 	userId: ObjectId,
-	type: "NASO" | "NASOLARINGE" | "ESTROBO",
+	type: "NASO" | "NASOLARINGE" | "ESTROBO" | "OTOFIBRO",
 	how: "INCREMENT" | "DECREMENT",
 ): Promise<boolean> {
 	const mongodbReturn = await getMongoDb();
@@ -202,6 +223,17 @@ async function updateNumbers(
 					estrobo: { $gt: 0 },
 				};
 				updateFilter = { $inc: { estrobo: -1 } };
+			}
+			break;
+		case "OTOFIBRO":
+			if (how === "INCREMENT") {
+				updateFilter = { $inc: { otofibroscopia: 1 } };
+			} else {
+				filter = {
+					...filter,
+					otofibroscopia: { $gt: 0 },
+				};
+				updateFilter = { $inc: { otofibroscopia: -1 } };
 			}
 			break;
 		default:

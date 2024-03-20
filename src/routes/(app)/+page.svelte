@@ -11,6 +11,7 @@
 		{ label: "Tarefas", href: "/tasks" },
 		{ label: "Internações externas", href: "/external-admissions" },
 		{ label: "Sala da Naso", href: "/naso" },
+		{ label: "Centro Cirúrgico", href: "/cc" },
 		{ label: "Mudar senha", href: "/users/@me/change-password" },
 	];
 </script>

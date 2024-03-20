@@ -99,6 +99,28 @@
 					<div class="daisy-stat-title">Estrobo</div>
 					<div class="daisy-stat-value">{data.nasos.estrobo}</div>
 				</div>
+				<div class="daisy-stat">
+					<div class="daisy-stat-figure text-secondary">
+						<form method="POST">
+							{#if data.nasos.otofibroscopia > 0}
+								<button
+									formaction="?/decrementOto&date={data.date}"
+									class="daisy-btn daisy-btn-circle"
+								>
+									-
+								</button>
+							{/if}
+							<button
+								formaction="?/incrementOto&date={data.date}"
+								class="daisy-btn daisy-btn-circle daisy-btn-outline"
+							>
+								+
+							</button>
+						</form>
+					</div>
+					<div class="daisy-stat-title">Otofibro</div>
+					<div class="daisy-stat-value">{data.nasos.otofibroscopia}</div>
+				</div>
 			</div>
 		</div>
 	</div>

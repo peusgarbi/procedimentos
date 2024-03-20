@@ -1,5 +1,6 @@
 // See https://kit.svelte.dev/docs/types#app
 
+import type { Cirurgia } from "$lib/server/parser/ccPdfParser";
 import type { ObjectId } from "mongodb";
 
 // for information about these interfaces
@@ -54,6 +55,11 @@ declare global {
 		naso: number;
 		nasoLaringe: number;
 		estrobo: number;
+	}
+
+	interface CC {
+		date: string;
+		salas: Cirurgia[][];
 	}
 
 	interface Admission {

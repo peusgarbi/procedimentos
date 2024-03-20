@@ -70,7 +70,7 @@ function dividir_cirurgias_da_sala(texto: string): string[] {
 	return match || [];
 }
 
-interface Cirurgia {
+export interface Cirurgia {
 	sala: string;
 	horario: string;
 	paciente: string;
@@ -137,23 +137,38 @@ async function extrair_info_de_cirurgia_de_uma_sala(
 }
 
 interface ParsedCC {
+	error: false;
 	date: string;
 	salas: Cirurgia[][];
 }
 
-export async function parseCCPdf(file: File): Promise<ParsedCC> {
-	const text = await extractTextFromPDF(file);
-	const salas = dividir_salas(text);
-	const salasParsed = await Promise.all([
-		extrair_info_de_cirurgia_de_uma_sala("Sala 1", salas.sala1),
-		extrair_info_de_cirurgia_de_uma_sala("Sala 2", salas.sala2),
-		extrair_info_de_cirurgia_de_uma_sala("Sala 3", salas.sala3),
-		extrair_info_de_cirurgia_de_uma_sala("Sala 4", salas.sala4),
-		extrair_info_de_cirurgia_de_uma_sala("Sala 5", salas.sala5),
-	]);
+interface ParsedCCError {
+	error: true;
+	message: string;
+}
 
-	return {
-		date: salas.date,
-		salas: salasParsed,
-	};
+export async function parseCCPdf(file: File): Promise<ParsedCC | ParsedCCError> {
+	try {
+		const text = await extractTextFromPDF(file);
+		const salas = dividir_salas(text);
+		const salasParsed = await Promise.all([
+			extrair_info_de_cirurgia_de_uma_sala("Sala 1", salas.sala1),
+			extrair_info_de_cirurgia_de_uma_sala("Sala 2", salas.sala2),
+			extrair_info_de_cirurgia_de_uma_sala("Sala 3", salas.sala3),
+			extrair_info_de_cirurgia_de_uma_sala("Sala 4", salas.sala4),
+			extrair_info_de_cirurgia_de_uma_sala("Sala 5", salas.sala5),
+		]);
+
+		return {
+			error: false,
+			date: salas.date,
+			salas: salasParsed,
+		};
+	} catch (error) {
+		console.error(error);
+		return {
+			error: true,
+			message: "Erro ao tentar processar cirurgias do arquivo PDF.",
+		};
+	}
 }

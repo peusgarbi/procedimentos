@@ -124,4 +124,5 @@
 			</div>
 		</div>
 	</div>
+	<a href="/naso/total" class="max-w-sm mx-auto daisy-btn daisy-btn-primary">Ver total!</a>
 </main>

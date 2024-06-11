@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { weDoAllSurgeons, weOnlyDoDescriptionsSurgeons } from "$lib/constants/surgeons";
+	import type { ParsedProcedures } from "$lib/server/parser/procedureParser";
 	import CopySvg from "$lib/components/svg/CopySvg.svelte";
 	import toast, { Toaster } from "svelte-french-toast";
 	import { superForm } from "sveltekit-superforms";
 	import { slide } from "svelte/transition";
 	import type { PageData } from "./$types";
+	import axios from "axios";
 
 	export let data: PageData;
 
@@ -30,6 +32,11 @@
 	function submitForm() {
 		const formulario = document.getElementById("selectDateForm") as HTMLFormElement;
 		formulario.submit();
+	}
+
+	async function parseProcedures(procedures: string): Promise<void> {
+		const { data } = await axios.post<ParsedProcedures>("/api/procedures", { procedures });
+		console.log(data);
 	}
 </script>
 
@@ -116,7 +123,9 @@
 									<td>{surgery.convenio}</td>
 									<td>{surgery.servicos}</td>
 									<td class="flex flex-row gap-1">
-										<div>-</div>
+										<button type="button" on:click={() => parseProcedures(surgery.servicos)}
+											>PP</button
+										>
 									</td>
 								</tr>
 							{:else if weOnlyDoDescriptionsSurgeons.includes(surgery.cirurgiao)}
@@ -137,7 +146,9 @@
 									<td>{surgery.convenio}</td>
 									<td>{surgery.servicos}</td>
 									<td class="flex flex-row gap-1">
-										<div>-</div>
+										<button type="button" on:click={() => parseProcedures(surgery.servicos)}
+											>PP</button
+										>
 									</td>
 								</tr>
 							{:else}
@@ -158,7 +169,9 @@
 									<td>{surgery.convenio}</td>
 									<td>{surgery.servicos}</td>
 									<td class="flex flex-row gap-1">
-										<div>-</div>
+										<button type="button" on:click={() => parseProcedures(surgery.servicos)}
+											>PP</button
+										>
 									</td>
 								</tr>
 							{/if}
